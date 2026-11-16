@@ -38,4 +38,5 @@ Cross-linking is intentional: a finished chapter can unlock a related opportunit
 - `estudo/CONTENT_LIBRARY.md` — verified catalog of real sources, mapped to roadmap stages.
 - `estudo/progress/` — one file per stage (my prediction, my code, AI comparison, mistakes, flashcards).
 - `estudo/cards/` — generated flashcards (key concepts + mistakes), reviewed via SM-2, reachable any time regardless of current stage.
+- `estudo/scripts/` — Phase 1 tool, stdlib-only Python: `extract_cards.py` parses `progress/*.md` into `cards/cards.json` (idempotent, by id); `review.py` runs the SM-2 review loop for whatever is due; `sm2.py` is the scheduling algorithm. No web framework yet — Phase 2 only after this proves out with real content.
 - `oportunidades/README.md`, `noticias/README.md` — design notes for the other two fronts, not yet built.
