@@ -1,14 +1,18 @@
 # Roadmap
 
-## Track 1 — Math: the life of one model (NumPy only, no frameworks)
-| Stage | Topic | Math | Build from scratch |
+## Track 1 — Math as used to build an LLM (NumPy only, no frameworks)
+Pivoted 2026-11-16: skipping generic math-foundations stages (already covered per `CLAUDE.md` — calculus, linear algebra, probability, verified sufficient, no separate diagnostic needed going forward). The spine is now IMPA's GPT series (`estudo/CONTENT_LIBRARY.md`, built in the spirit of Karpathy's micrograd/makemore), math introduced only as each piece needs it — not taught loose beforehand.
+
+| Step | IMPA source | Topic | Math |
 |---|---|---|---|
-| 1 | Data -> numbers | vectors, matrices, normalization, statistics | load a dataset, compute stats by hand |
-| 2 | Prediction (forward pass) | linear algebra, activation functions | one neuron, then a small network |
-| 3 | Error (loss) | probability, MSE, cross-entropy, maximum likelihood | loss functions, checked against formulas |
-| 4 | Learning (backprop) | derivatives, chain rule, gradients | backprop by hand, verify with numerical gradients |
-| 5 | Optimization | gradient descent, SGD, Adam, overfitting, regularization | an optimizer from scratch |
-| 6 | Answering (inference) | softmax, sampling, attention, transformers | a tiny language model |
+| 1 | `gpt_0.ipynb` | Automatic differentiation | finite differences, chain rule, gradient accumulation over shared inputs, reverse-mode backprop via topological sort |
+| 2 | `gpt_1.ipynb` | Bigram/trigram language model | counting-based probability, first real language model |
+| 3 | `gpt_2.ipynb` | Single-layer neural network | linear algebra, activation functions |
+| 4 | `gpt_3.ipynb` | Fixing problems in the network | diagnosing training issues (init, saturation, etc.) |
+| 5 | `gpt_4.ipynb` | Multi-layer network | deeper forward/backward pass |
+| 6 | `gpt_5.ipynb` | GPT | softmax, attention, transformers |
+
+Old generic stages (vectors/stats in isolation, MSE/cross-entropy/MLE as abstract loss theory, standalone optimizer from scratch) are shelved, not deleted — `CONTENT_LIBRARY.md`'s d2l.ai mapping for those stays valid if this track ever needs to backfill a gap.
 
 ## Track 2 — Tools (after each math stage, not before)
 - Core: Python, Git/GitHub, scikit-learn, PyTorch (rebuild the NumPy projects in PyTorch).
@@ -41,4 +45,4 @@ Not a simple average — **autonomy caps the level**: if I only caught the gap a
 | Autonomy | only noticed the gap after seeing Claude's solution | noticed alone on review, didn't prevent it | prevented it in the first pass |
 
 ## Order
-Stages 1-5 before agents and MCP. Next step: Stage 1 (single neuron in NumPy).
+Steps 1-6 of Track 1 (the GPT series) before agents and MCP. Next step: Step 1 — automatic differentiation.
