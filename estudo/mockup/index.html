@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Study Platform — mockup</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --fg: #1d1d1f; --muted: #6b6b70; --card: #ffffff;
+    --border: #e3e3e0; --accent: #3a6ea5;
+    --ok-bg: #e6f4ea; --ok-fg: #1e6b34;
+    --warn-bg: #fdecea; --warn-fg: #a13b2b;
+    --off-bg: #eeeeee; --off-fg: #666666;
+    --mixed-bg: #fff6e0; --mixed-fg: #8a6400;
+    --lock-bg: #eeeeee; --lock-fg: #999999;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17181a; --fg: #eaeaec; --muted: #9a9aa0; --card: #1f2023;
+      --border: #313236; --accent: #7aa7d9;
+      --ok-bg: #163620; --ok-fg: #7fd99a;
+      --warn-bg: #3a211e; --warn-fg: #e8a398;
+      --off-bg: #2a2a2d; --off-fg: #a0a0a5;
+      --mixed-bg: #3a2f10; --mixed-fg: #e8c35e;
+      --lock-bg: #2a2a2d; --lock-fg: #76767a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .mockup-banner {
+    background: var(--mixed-bg); color: var(--mixed-fg); font-size: 12px;
+    text-align: center; padding: 6px 10px; font-weight: 600;
+  }
+  header { padding: 18px 16px 10px; max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 2px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .level-badge {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+    padding: 6px 12px; border-radius: 999px; background: var(--card);
+    border: 1px solid var(--border); font-size: 13px; font-weight: 600;
+  }
+  .level-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  nav.tabs {
+    display: flex; gap: 6px; max-width: 760px; margin: 10px auto 0; padding: 0 16px;
+    flex-wrap: wrap;
+  }
+  nav.tabs .tab {
+    padding: 9px 16px; border-radius: 9px; border: 1px solid var(--border);
+    background: var(--card); cursor: pointer; font-size: 14px; color: var(--fg);
+    min-height: 40px; display: flex; align-items: center;
+  }
+  nav.tabs .tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+  main { max-width: 760px; margin: 0 auto; padding: 16px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Trilha */
+  .step-row {
+    display: flex; align-items: center; gap: 12px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+    margin-bottom: 10px; cursor: pointer;
+  }
+  .step-row.locked { opacity: .55; cursor: not-allowed; }
+  .step-num {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--bg);
+    display: flex; align-items: center; justify-content: center; font-weight: 700;
+    font-size: 13px; flex-shrink: 0; border: 1px solid var(--border);
+  }
+  .step-row.done .step-num { background: var(--ok-bg); color: var(--ok-fg); border-color: var(--ok-bg); }
+  .step-row.current .step-num { background: var(--accent); color: white; border-color: var(--accent); }
+  .step-main { flex: 1; min-width: 0; }
+  .step-title { font-weight: 600; font-size: 14.5px; }
+  .step-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .status-chip { font-size: 11px; padding: 3px 9px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+  .status-chip.done { background: var(--ok-bg); color: var(--ok-fg); }
+  .status-chip.current { background: var(--mixed-bg); color: var(--mixed-fg); }
+  .status-chip.locked { background: var(--lock-bg); color: var(--lock-fg); }
+
+  /* Chapter view */
+  .back-link { color: var(--accent); cursor: pointer; font-size: 13px; display: inline-block; margin-bottom: 10px; }
+  .chapter-title { font-size: 19px; font-weight: 700; margin: 0 0 2px; }
+  .chapter-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
+  .subtabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .subtabs .stab {
+    padding: 7px 13px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--card); cursor: pointer; font-size: 13px;
+  }
+  .subtabs .stab.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .subview { display: none; }
+  .subview.active { display: block; }
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+  .panel p { margin: 0 0 10px; }
+  .panel p:last-child { margin-bottom: 0; }
+  code { background: var(--bg); padding: 1px 5px; border-radius: 4px; font-size: 12.5px; }
+
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+  .badge.verificado { background: var(--ok-bg); color: var(--ok-fg); }
+  .badge.nao_verificado { background: var(--warn-bg); color: var(--warn-fg); }
+
+  .course-card { display: flex; gap: 10px; align-items: flex-start; }
+  .course-card + .course-card { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .course-title { font-weight: 600; font-size: 14px; }
+  .course-note { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+  .activity { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .activity:last-child { border-bottom: none; }
+  .activity input[type=checkbox] { width: 20px; height: 20px; margin-top: 1px; flex-shrink: 0; }
+  .activity.locked { opacity: .5; }
+  .activity-text { font-size: 14px; }
+  .activity-hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .eval-form { margin-top: 14px; }
+  .eval-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+  .eval-row label { font-size: 13px; }
+  .eval-row select { padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); font-size: 13px; }
+  button.primary {
+    background: var(--accent); color: white; border: none; border-radius: 8px;
+    padding: 10px 16px; font-size: 14px; cursor: pointer; font-weight: 600;
+  }
+  button.ghost {
+    background: transparent; color: var(--accent); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 10px 16px; font-size: 14px; cursor: pointer; font-weight: 600;
+  }
+  .eval-result { margin-top: 12px; padding: 12px; border-radius: 8px; background: var(--bg); font-size: 13px; }
+
+  /* Flashcards */
+  .fc-wrap { text-align: center; }
+  .fc-count { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .fc-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 36px 20px; min-height: 160px; display: flex; align-items: center;
+    justify-content: center; font-size: 17px; font-weight: 500; margin-bottom: 16px;
+  }
+  .fc-origin { font-size: 11px; color: var(--muted); font-weight: 400; margin-bottom: 10px; }
+  .fc-actions { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .fc-grade-hint { font-size: 12px; color: var(--muted); }
+  .fc-grades { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+  .fc-grades button {
+    width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card); font-size: 15px; font-weight: 700; cursor: pointer; color: var(--fg);
+  }
+  .fc-grades button:hover { border-color: var(--accent); }
+
+  /* Progresso */
+  .axis-row { margin-bottom: 14px; }
+  .axis-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
+  .axis-bar { height: 10px; border-radius: 999px; background: var(--bg); border: 1px solid var(--border); overflow: hidden; }
+  .axis-fill { height: 100%; background: var(--accent); }
+  .empty-note { color: var(--muted); font-size: 13.5px; }
+
+  @media (max-width: 480px) {
+    main { padding: 12px; }
+    .step-row { padding: 12px; }
+    .fc-grades button { width: 38px; height: 38px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mockup-banner">MOCKUP visual — dados fictícios, sem IA real avaliando, sem backend. Roda só no navegador.</div>
+
+<header>
+  <h1>AI Study Platform</h1>
+  <div class="sub">Track 1 — Matemática como é usada em LLM (série GPT do IMPA + Karpathy)</div>
+  <div class="level-badge"><span class="dot"></span><span id="level-badge-text">Nível: —</span></div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" data-view="trilha">Trilha</div>
+  <div class="tab" data-view="flashcards">Flashcards</div>
+  <div class="tab" data-view="progresso">Progresso</div>
+</nav>
+
+<main>
+
+  <!-- TRILHA -->
+  <div class="view active" id="view-trilha">
+    <div id="step-list"></div>
+  </div>
+
+  <!-- CAPÍTULO -->
+  <div class="view" id="view-chapter">
+    <span class="back-link" id="back-to-trilha">&larr; voltar pra trilha</span>
+    <div class="chapter-title" id="chapter-title"></div>
+    <div class="chapter-sub" id="chapter-sub"></div>
+    <div class="subtabs" id="chapter-subtabs"></div>
+    <div id="chapter-subviews"></div>
+  </div>
+
+  <!-- FLASHCARDS -->
+  <div class="view" id="view-flashcards">
+    <div class="fc-wrap">
+      <div class="fc-count" id="fc-count"></div>
+      <div class="fc-origin" id="fc-origin"></div>
+      <div class="fc-card" id="fc-card"></div>
+      <div class="fc-actions" id="fc-actions"></div>
+    </div>
+  </div>
+
+  <!-- PROGRESSO -->
+  <div class="view" id="view-progresso">
+    <div class="panel">
+      <strong>Rubrica (ROADMAP.md)</strong>
+      <p class="activity-hint" style="margin-top:6px">Autonomia limita o nível geral — se você só percebeu o erro depois de ver a solução da IA, o capítulo não fecha como senior mesmo com código correto.</p>
+    </div>
+    <div class="panel" id="axis-panel"></div>
+    <div class="panel">
+      <strong>Capítulos avaliados</strong>
+      <div id="eval-history" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const LEVEL_RANK = { junior: 1, pleno: 2, senior: 3 };
+const RANK_LEVEL = { 1: 'junior', 2: 'pleno', 3: 'senior' };
+const LEVEL_LABEL = { junior: 'Junior', pleno: 'Pleno', senior: 'Senior' };
+const AXES = [
+  { key: 'correctness', label: 'Correção' },
+  { key: 'edge', label: 'Casos extremos' },
+  { key: 'complexity', label: 'Complexidade' },
+  { key: 'autonomy', label: 'Autonomia' },
+];
+
+const STEPS = [
+  {
+    id: 's1', num: 1, title: 'Diferenciação automática', impa: 'gpt_0.ipynb',
+    content: `<p>Todo treino de rede neural depende de calcular o gradiente da loss em relação a cada parâmetro. Diferenciação automática (autodiff) faz isso sem derivar nada à mão: constrói um grafo computacional no forward pass (cada operação vira um nó) e depois percorre esse grafo de trás pra frente aplicando a regra da cadeia.</p>
+      <p>Dois pontos que travam gente iniciante: (1) quando uma variável é usada em mais de um lugar do grafo, o gradiente dela é a <strong>soma</strong> das contribuições de cada caminho, nunca sobrescrito; (2) a ordem de percorrer o grafo no backward pass precisa ser uma ordenação topológica (toda dependência calculada antes de quem depende dela).</p>`,
+    courses: [
+      { title: 'IMPA — gpt_0.ipynb', badge: 'verificado', note: 'Notebook oficial do curso de mestrado, construção de autodiff do zero em Python.' },
+      { title: 'Karpathy — aula 1, "building micrograd"', badge: 'verificado', note: 'Mesma construção, implementação independente. Bom pra comparar depois de fazer a sua.' },
+      { title: 'd2l.ai — 2.5 Automatic Differentiation', badge: 'verificado', note: 'Versão mais formal/matemática, útil se a explicação do notebook não bastar.' },
+    ],
+    activities: [
+      { text: 'Ler o notebook gpt_0.ipynb e assistir a aula 1 do Karpathy' },
+      { text: 'Prever à mão df/da, df/db, df/dc do grafo de exemplo — antes de qualquer código' },
+      { text: 'Implementar a classe Value (operadores + backward()) — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_0.md' },
+    ],
+    flashcards: [
+      { q: 'Qual a diferença entre modo forward e modo reverse na diferenciação automática?', a: 'Forward propaga derivadas junto com os valores, da entrada pra saída — bom quando há poucas entradas e muitas saídas. Reverse (backprop) calcula a saída primeiro e propaga gradientes de trás pra frente — bom quando há muitas entradas (parâmetros) e uma saída (loss), que é o caso de redes neurais.' },
+      { q: 'Por que o gradiente é acumulado, não sobrescrito, quando uma variável alimenta mais de um nó?', a: 'Pela regra da cadeia multivariável: a derivada total em relação a essa variável é a soma das derivadas parciais de cada caminho que passa por ela. Sobrescrever perderia a contribuição dos outros caminhos.' },
+      { q: 'Pra que serve a ordenação topológica no backward pass?', a: 'Garante que o gradiente de um nó só é calculado depois que todos os nós que dependem dele já propagaram seus próprios gradientes pra trás — sem isso, um nó recebe gradiente incompleto.' },
+    ],
+    project: null,
+  },
+  {
+    id: 's2', num: 2, title: 'Bigramas e trigramas', impa: 'gpt_1.ipynb',
+    content: `<p>Primeiro modelo de linguagem de verdade: em vez de regra da cadeia, aqui é contagem de frequência. Dado um caractere (ou par de caracteres), qual a distribuição de probabilidade do próximo? Isso já é um language model, só que sem rede neural nenhuma — a tabela de contagens É o modelo.</p>
+      <p>É a base de comparação pra entender depois o que uma rede neural adiciona: generalização pra contextos nunca vistos exatamente, em vez de só contar o que já apareceu.</p>`,
+    courses: [
+      { title: 'IMPA — gpt_1.ipynb', badge: 'verificado', note: 'Bigrama/trigrama construído em cima do autodiff do gpt_0.' },
+      { title: 'Karpathy — aula 2, "building makemore"', badge: 'verificado', note: 'Introduz torch.Tensor e o workflow treino/sampling/NLL loss.' },
+    ],
+    activities: [
+      { text: 'Ler gpt_1.ipynb e assistir a aula 2 do Karpathy' },
+      { text: 'Prever: quantos parâmetros tem uma tabela de bigramas pra um alfabeto de 27 símbolos?' },
+      { text: 'Implementar contagem + amostragem de um modelo de bigrama — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_1.md' },
+    ],
+    flashcards: [
+      { q: 'O que é negative log-likelihood (NLL) nesse contexto?', a: 'Métrica de qualidade do modelo: pega a probabilidade que o modelo deu pro caractere que realmente veio a seguir, tira log e inverte o sinal. Quanto menor, melhor — o modelo "não se surpreendeu".' },
+      { q: 'Por que um modelo de trigrama generaliza pior que uma rede neural pra contextos longos?', a: 'Contagem pura sofre de esparsidade: contextos específicos que nunca apareceram no treino viram probabilidade zero. Uma rede neural aprende representações contínuas que generalizam pra combinações nunca vistas.' },
+    ],
+    project: null,
+  },
+  {
+    id: 's3', num: 3, title: 'Rede neural de uma camada', impa: 'gpt_2.ipynb',
+    content: `<p>Troca a tabela de contagem por uma camada linear + softmax. Mesma tarefa do capítulo anterior (prever próximo caractere), mas agora os parâmetros são aprendidos por gradiente descendente usando o autodiff do capítulo 1 — os três primeiros capítulos se encaixam aqui.</p>`,
+    courses: [
+      { title: 'IMPA — gpt_2.ipynb', badge: 'verificado', note: 'Rede de uma camada treinada com o autodiff construído no gpt_0.' },
+      { title: 'd2l.ai — cap. 12 (Optimization Algorithms)', badge: 'verificado', note: 'GD, SGD, Momentum, Adam — contexto de como o treino de fato otimiza os pesos.' },
+    ],
+    activities: [
+      { text: 'Ler gpt_2.ipynb' },
+      { text: 'Prever: o que muda na loss ao trocar a tabela de contagem por uma camada linear treinável?' },
+      { text: 'Implementar a rede de uma camada — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_2.md' },
+    ],
+    flashcards: [
+      { q: 'Por que usar softmax na saída de um modelo de linguagem?', a: 'Transforma os logits (valores reais, sem limite) numa distribuição de probabilidade válida (soma 1, todos não-negativos) sobre os próximos caracteres possíveis.' },
+    ],
+    project: null,
+  },
+  {
+    id: 's4', num: 4, title: 'Resolvendo problemas na rede', impa: 'gpt_3.ipynb',
+    content: `<p>Capítulo de diagnóstico: inicialização ruim, saturação de ativação, loss que não desce — os problemas reais que aparecem assim que a rede para de ser um brinquedo de 1 camada. O objetivo aqui não é aprender técnica nova, é aprender a <em>enxergar</em> o que está quebrado olhando estatísticas de ativação e gradiente.</p>`,
+    courses: [
+      { title: 'IMPA — gpt_3.ipynb', badge: 'verificado', note: 'Diagnóstico de problemas reais de treino na rede do capítulo anterior.' },
+      { title: 'Karpathy — aula 4, "Activations & Gradients, BatchNorm"', badge: 'verificado', note: 'Mesmo diagnóstico, com visualizações de histograma de ativação/gradiente.' },
+    ],
+    activities: [
+      { text: 'Ler gpt_3.ipynb e assistir a aula 4 do Karpathy' },
+      { text: 'Prever: o que acontece com o gradiente se a ativação satura perto de 0 ou 1?' },
+      { text: 'Diagnosticar e corrigir a inicialização da rede do capítulo anterior — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_3.md' },
+    ],
+    flashcards: [
+      { q: 'O que o BatchNorm resolve, na prática?', a: 'Normaliza a entrada de cada camada pra média 0 e variância 1 (com parâmetros aprendidos de escala/deslocamento), o que estabiliza a distribuição de ativações ao longo do treino e reduz a sensibilidade à inicialização.' },
+    ],
+    project: null,
+  },
+  {
+    id: 's5', num: 5, title: 'Rede de muitas camadas', impa: 'gpt_4.ipynb',
+    content: `<p>Empilha o que foi corrigido no capítulo anterior em várias camadas — forward/backward mais profundo, mesmos princípios, mais um lugar pra coisa dar errado se o capítulo 4 não foi bem entendido.</p>`,
+    courses: [
+      { title: 'IMPA — gpt_4.ipynb', badge: 'verificado', note: 'Rede multi-camada, construção incremental sobre os capítulos anteriores.' },
+      { title: 'Karpathy — aula 6, "Building WaveNet"', badge: 'verificado', note: 'Versão mais profunda em estilo árvore/convolucional, introduz torch.nn.' },
+    ],
+    activities: [
+      { text: 'Ler gpt_4.ipynb e assistir a aula 6 do Karpathy' },
+      { text: 'Implementar a versão multi-camada — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_4.md' },
+    ],
+    flashcards: [
+      { q: 'Por que empilhar camadas sem corrigir inicialização/normalização piora o problema do capítulo anterior?', a: 'Qualquer desequilíbrio de escala em uma camada se multiplica ao passar pelas camadas seguintes (forward) e pelos gradientes (backward), então o problema de uma camada vira o problema de todas as de cima.' },
+    ],
+    project: null,
+  },
+  {
+    id: 's6', num: 6, title: 'GPT completo', impa: 'gpt_5.ipynb',
+    content: `<p>Junta tudo: atenção, transformers, e um modelo de linguagem de verdade treinado do zero — o mesmo princípio por trás do ChatGPT, só que em escala de brinquedo e com cada peça construída à mão nos capítulos anteriores.</p>`,
+    courses: [
+      { title: 'IMPA — gpt_5.ipynb', badge: 'verificado', note: 'GPT completo, fecha a série.' },
+      { title: "Karpathy — aula 7, \"Let's build GPT\"", badge: 'verificado', note: 'Baseado em "Attention Is All You Need" + GPT-2/3.' },
+      { title: "Karpathy — aula 8, \"Let's build the GPT Tokenizer\"", badge: 'verificado', note: 'BPE tokenizer — único lugar do catálogo que cobre isso em profundidade.' },
+    ],
+    activities: [
+      { text: 'Ler gpt_5.ipynb e assistir as aulas 7 e 8 do Karpathy' },
+      { text: 'Implementar atenção + bloco transformer — tentativa própria' },
+      { text: 'Comparar com a solução da IA', hint: 'desbloqueia só depois da sua própria tentativa' },
+      { text: 'Registrar em estudo/progress/gpt_5.md' },
+    ],
+    flashcards: [
+      { q: 'O que o mecanismo de atenção calcula, em uma frase?', a: 'Pra cada posição, uma média ponderada dos valores (values) de todas as outras posições, onde o peso vem da similaridade entre a query dessa posição e a key de cada outra posição.' },
+    ],
+    project: {
+      title: 'Projeto final da track — bigram → GPT, ponta a ponta',
+      description: 'Pegue o dataset usado nos capítulos (nomes ou texto curto), treine um modelo de bigrama (capítulo 2) e um GPT pequeno (capítulo 6) sobre os mesmos dados, e compare qualidade de amostra + loss. Write-up curto pro GitHub explicando a diferença.',
+    },
+  },
+];
+
+const FLASHCARDS = STEPS.flatMap(s => s.flashcards.map(c => ({ ...c, step: s.title, stepNum: s.num })));
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem('aistudy_mockup_state')) || { activities: {}, evaluations: {}, fcIndex: 0 };
+  } catch (e) {
+    return { activities: {}, evaluations: {}, fcIndex: 0 };
+  }
+}
+function saveState() {
+  try { localStorage.setItem('aistudy_mockup_state', JSON.stringify(state)); } catch (e) {}
+}
+let state = loadState();
+
+function stepActivityState(stepId, count) {
+  if (!state.activities[stepId]) state.activities[stepId] = new Array(count).fill(false);
+  return state.activities[stepId];
+}
+
+function stepStatus(step, index) {
+  if (state.evaluations[step.id]) return 'done';
+  const prev = STEPS[index - 1];
+  if (index === 0 || (prev && state.evaluations[prev.id])) return 'current';
+  return 'locked';
+}
+
+function computeOverallLevel() {
+  const evals = Object.values(state.evaluations);
+  if (!evals.length) return null;
+  const avgOf = key => evals.reduce((a, e) => a + LEVEL_RANK[e[key]], 0) / evals.length;
+  const baseAvg = (avgOf('correctness') + avgOf('edge') + avgOf('complexity')) / 3;
+  const minAutonomy = Math.min(...evals.map(e => LEVEL_RANK[e.autonomy]));
+  const rank = Math.max(1, Math.min(Math.round(baseAvg), minAutonomy));
+  return RANK_LEVEL[rank];
+}
+
+function refreshLevelBadge() {
+  const level = computeOverallLevel();
+  document.getElementById('level-badge-text').textContent =
+    level ? `Nível: ${LEVEL_LABEL[level]}` : 'Nível: — (nenhum capítulo avaliado ainda)';
+}
+
+/* ---------- Trilha ---------- */
+function renderStepList() {
+  const el = document.getElementById('step-list');
+  el.innerHTML = STEPS.map((s, i) => {
+    const status = stepStatus(s, i);
+    const label = { done: 'Concluído', current: 'Em andamento', locked: 'Bloqueado' }[status];
+    return `
+      <div class="step-row ${status}" data-step="${s.id}">
+        <div class="step-num">${s.num}</div>
+        <div class="step-main">
+          <div class="step-title">${s.title}</div>
+          <div class="step-sub">IMPA · ${s.impa}${s.project ? ' · inclui projeto final' : ''}</div>
+        </div>
+        <span class="status-chip ${status}">${label}</span>
+      </div>`;
+  }).join('');
+  el.querySelectorAll('.step-row').forEach(row => {
+    row.addEventListener('click', () => {
+      if (row.classList.contains('locked')) return;
+      openChapter(row.dataset.step);
+    });
+  });
+}
+
+/* ---------- Capítulo ---------- */
+let currentStepId = null;
+function openChapter(stepId) {
+  currentStepId = stepId;
+  const step = STEPS.find(s => s.id === stepId);
+  document.getElementById('chapter-title').textContent = `Passo ${step.num} — ${step.title}`;
+  document.getElementById('chapter-sub').textContent = `IMPA ${step.impa}`;
+
+  const tabs = ['Conteúdo', 'Cursos', 'Atividades'];
+  if (step.project) tabs.push('Projeto');
+
+  document.getElementById('chapter-subtabs').innerHTML = tabs.map((t, i) =>
+    `<div class="stab ${i === 0 ? 'active' : ''}" data-sub="${t}">${t}</div>`).join('');
+
+  const views = {};
+  views['Conteúdo'] = `<div class="panel">${step.content}</div>`;
+  views['Cursos'] = `<div class="panel">${step.courses.map(c => `
+      <div class="course-card">
+        <span class="badge ${c.badge}">${c.badge === 'verificado' ? 'Verificado' : 'Não verificado'}</span>
+        <div>
+          <div class="course-title">${c.title}</div>
+          <div class="course-note">${c.note}</div>
+        </div>
+      </div>`).join('')}</div>`;
+  views['Atividades'] = renderActivities(step);
+  if (step.project) views['Projeto'] = renderProject(step);
+
+  const subviewsEl = document.getElementById('chapter-subviews');
+  subviewsEl.innerHTML = tabs.map((t, i) =>
+    `<div class="subview ${i === 0 ? 'active' : ''}" data-view="${t}">${views[t]}</div>`).join('');
+
+  document.getElementById('chapter-subtabs').querySelectorAll('.stab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      subviewsEl.querySelectorAll('.subview').forEach(v => {
+        v.classList.toggle('active', v.dataset.view === tab.dataset.sub);
+      });
+    });
+  });
+
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-chapter').classList.add('active');
+
+  wireEvalForm(step.id);
+  if (step.project) wireEvalForm(step.id + '-project');
+}
+
+function renderActivities(step) {
+  const arr = stepActivityState(step.id, step.activities.length);
+  const rows = step.activities.map((a, i) => {
+    const locked = i > 0 && !arr[i - 1];
+    return `
+      <div class="activity ${locked ? 'locked' : ''}">
+        <input type="checkbox" data-idx="${i}" ${arr[i] ? 'checked' : ''} ${locked ? 'disabled' : ''}>
+        <div>
+          <div class="activity-text">${a.text}</div>
+          ${a.hint ? `<div class="activity-hint">${a.hint}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+  const allDone = arr.every(Boolean);
+  const existingEval = state.evaluations[step.id];
+  const evalBlock = allDone ? renderEvalForm(step.id, existingEval) : '';
+  return `<div class="panel" id="activities-panel">${rows}</div>${evalBlock}`;
+}
+
+function renderEvalForm(evalId, existing) {
+  const sel = (key) => `
+    <select data-axis="${key}">
+      ${['junior', 'pleno', 'senior'].map(l =>
+        `<option value="${l}" ${existing && existing[key] === l ? 'selected' : ''}>${LEVEL_LABEL[l]}</option>`).join('')}
+    </select>`;
+  return `
+    <div class="panel eval-form" id="eval-form-${evalId}">
+      <strong>Avaliação desta tarefa (simulada — sem IA real)</strong>
+      <div style="margin-top:12px">
+        ${AXES.map(ax => `
+          <div class="eval-row"><label>${ax.label}</label>${sel(ax.key)}</div>`).join('')}
+      </div>
+      <button class="primary" id="save-eval-${evalId}">Salvar avaliação</button>
+      ${existing ? `<div class="eval-result">Resultado salvo. Veja a aba Progresso.</div>` : ''}
+    </div>`;
+}
+
+function wireEvalForm(evalId) {
+  const btn = document.getElementById(`save-eval-${evalId}`);
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const form = document.getElementById(`eval-form-${evalId}`);
+    const result = {};
+    form.querySelectorAll('select[data-axis]').forEach(s => { result[s.dataset.axis] = s.value; });
+    state.evaluations[evalId] = result;
+    saveState();
+    refreshLevelBadge();
+    renderStepList();
+    openChapter(currentStepId);
+  });
+}
+
+function renderProject(step) {
+  const evalId = step.id + '-project';
+  const existing = state.evaluations[evalId];
+  return `
+    <div class="panel">
+      <strong>${step.project.title}</strong>
+      <p style="margin-top:8px">${step.project.description}</p>
+    </div>
+    ${renderEvalForm(evalId, existing)}`;
+}
+
+document.getElementById('back-to-trilha').addEventListener('click', () => {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-trilha').classList.add('active');
+  document.querySelectorAll('nav .tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('nav .tab[data-view="trilha"]').classList.add('active');
+});
+
+document.addEventListener('change', e => {
+  if (e.target.matches('.activity input[type=checkbox]')) {
+    const idx = parseInt(e.target.dataset.idx, 10);
+    stepActivityState(currentStepId, STEPS.find(s => s.id === currentStepId).activities.length)[idx] = e.target.checked;
+    saveState();
+    openChapter(currentStepId);
+  }
+});
+/* ---------- Flashcards ---------- */
+function renderFlashcard() {
+  const i = state.fcIndex % FLASHCARDS.length;
+  const card = FLASHCARDS[i];
+  document.getElementById('fc-count').textContent = `Cartão ${i + 1} de ${FLASHCARDS.length}`;
+  document.getElementById('fc-origin').textContent = `${card.step}`;
+  document.getElementById('fc-card').innerHTML = `<span id="fc-text">${card.q}</span>`;
+  document.getElementById('fc-actions').innerHTML = `
+    <button class="ghost" id="fc-reveal">Virar / ver resposta</button>`;
+  document.getElementById('fc-reveal').addEventListener('click', () => {
+    document.getElementById('fc-card').innerHTML = `<span id="fc-text">${card.a}</span>`;
+    document.getElementById('fc-actions').innerHTML = `
+      <div class="fc-grade-hint">0 = esqueci totalmente · 5 = lembrei fácil</div>
+      <div class="fc-grades">${[0,1,2,3,4,5].map(n => `<button data-grade="${n}">${n}</button>`).join('')}</div>`;
+    document.querySelectorAll('.fc-grades button').forEach(b => {
+      b.addEventListener('click', () => {
+        state.fcIndex = (state.fcIndex + 1) % FLASHCARDS.length;
+        saveState();
+        renderFlashcard();
+      });
+    });
+  });
+}
+
+/* ---------- Progresso ---------- */
+function renderProgress() {
+  const evals = Object.values(state.evaluations);
+  const axisPanel = document.getElementById('axis-panel');
+  if (!evals.length) {
+    axisPanel.innerHTML = `<div class="empty-note">Nenhum capítulo avaliado ainda — marque as atividades de um capítulo na aba Trilha e salve a avaliação simulada.</div>`;
+  } else {
+    axisPanel.innerHTML = AXES.map(ax => {
+      const avg = evals.reduce((a, e) => a + LEVEL_RANK[e[ax.key]], 0) / evals.length;
+      const pct = ((avg - 1) / 2) * 100;
+      return `
+        <div class="axis-row">
+          <div class="axis-label"><span>${ax.label}</span><span>${avg.toFixed(1)} / 3</span></div>
+          <div class="axis-bar"><div class="axis-fill" style="width:${pct}%"></div></div>
+        </div>`;
+    }).join('');
+  }
+
+  const historyEl = document.getElementById('eval-history');
+  const entries = Object.entries(state.evaluations);
+  if (!entries.length) {
+    historyEl.innerHTML = `<div class="empty-note">—</div>`;
+  } else {
+    historyEl.innerHTML = entries.map(([id, e]) => {
+      const step = STEPS.find(s => id.startsWith(s.id));
+      const label = id.endsWith('-project') ? `${step.title} (projeto final)` : step.title;
+      return `<div style="font-size:13px;margin-bottom:6px">
+        <strong>${label}</strong> — correção: ${LEVEL_LABEL[e.correctness]}, casos extremos: ${LEVEL_LABEL[e.edge]}, complexidade: ${LEVEL_LABEL[e.complexity]}, autonomia: ${LEVEL_LABEL[e.autonomy]}
+      </div>`;
+    }).join('');
+  }
+}
+
+/* ---------- Nav ---------- */
+document.querySelectorAll('nav .tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('nav .tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('main > .view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + tab.dataset.view).classList.add('active');
+    if (tab.dataset.view === 'flashcards') renderFlashcard();
+    if (tab.dataset.view === 'progresso') renderProgress();
+  });
+});
+
+renderStepList();
+refreshLevelBadge();
+</script>
+</body>
+</html>

@@ -6,6 +6,8 @@ Legenda de verificação:
 - **[VERIFICADO]** — conteúdo real foi acessado (fetch/leitura direta) nesta pesquisa.
 - **[NÃO VERIFICADO]** — conhecido só por nome/reputação ou snippet de busca, conteúdo não foi lido diretamente.
 
+Para fontes em vídeo (YouTube): não há acesso a áudio/transcript completo nesta pesquisa. "[VERIFICADO]" em fonte de vídeo significa título + descrição/legenda confirmados reais (canal existe, vídeo existe, tema bate) — não que o conteúdo falado foi assistido. Suficiente pro catálogo; profundidade real só é avaliada quando o vídeo de fato for usado numa lição.
+
 Status: em andamento.
 
 ---
@@ -259,6 +261,34 @@ Fecha bem a lacuna "Track 2 - LLMs, agentes, RAG, MCP":
 - Pydantic for LLM Workflows — validação estruturada de output de LLM.
 - **Não encontrado**: nenhum curso específico de experiment tracking apareceu na parte visível da página (109 cursos no total, lista truncada — pode existir fora do que veio no fetch).
 
+## AI Engineer (canal @aiDotEngineer, conferência) **[VERIFICADO — título/descrição, não transcript]**
+
+Canal do YouTube da conferência "AI Engineer" (World's Fair, Summit, edições Europe), fundada por Shawn "swyx" Wang (Latent Space). Centenas de talks publicados, atualizado continuamente (edição 2026 já com recap publicado). Conteúdo é inteiramente Track 2 — engenharia prática de produção com LLMs, não matemática/fundamentos (fora do Track 1).
+
+Temas recorrentes confirmados na edição 2026 (World's Fair, Jun/Jul 2026): agentes em produção, avaliação/evals de sistemas agentic (talks dedicados de Meta, IBM, Weights & Biases, Braintrust), context engineering (tema crescendo além de RAG puro), Search & Retrieval (dense retrieval, hybrid search, re-ranking, RAG em escala), Graph RAG, Computer Use, Memory & Continual Learning, Sandbox & Platform Engineering.
+
+Exemplos de talks pontuais confirmados: "Production Evals For Agentic AI Systems" (Meta), "Agents in Production: How OpenGov Built and Scaled OG Assist".
+
+Relevância pro ROADMAP.md: fecha a lacuna "Track 2 - LLMs, agentes, RAG, MCP" com conteúdo muito mais atual que os cursos estruturados (HF, DeepLearning.AI) — é o lugar certo pra "o que está sendo usado em produção agora", não pra teoria. Não cobre nada de Track 1.
+Pendente: não há playlist única/estável catalogada (o canal reorganiza por evento) — ao usar, buscar direto no canal pelo tema da lição em questão.
+
+## Andrej Karpathy — Neural Networks: Zero to Hero **[VERIFICADO]** via `github.com/karpathy/nn-zero-to-hero` (playlist: `youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ`)
+
+Série em andamento ("Ongoing"), 8 aulas publicadas, 1-2h cada, código junto (micrograd/makemore em Python puro depois PyTorch). É a referência original que já vínhamos citando pro estilo do Track 1 (construir backprop do zero) — bate quase 1:1 com a série GPT do IMPA, mesma filosofia (bottom-up, código antes de framework).
+
+| # | Título | Cobre | Relevância |
+|---|---|---|---|
+| 1 | The spelled-out intro to neural networks and backpropagation: building micrograd | backprop do zero, grafo computacional, só Python+calculo básico | **Stage 4 — praticamente o mesmo exercício do IMPA gpt_0** |
+| 2 | The spelled-out intro to language modeling: building makemore | modelo de bigrama em nível de caractere, `torch.Tensor`, treino/sampling/NLL loss | Stage 2-3, equivalente a IMPA gpt_1 |
+| 3 | Building makemore Part 2: MLP | MLP, learning rate, hiperparâmetros, train/dev/test split, over/underfitting | Stage 2, 5 |
+| 4 | Building makemore Part 3: Activations & Gradients, BatchNorm | estatística de ativação/gradiente em redes profundas, BatchNorm | Stage 4-5, mais fundo que IMPA nesse ponto específico |
+| 5 | Building makemore Part 4: Becoming a Backprop Ninja | backprop manual por um MLP de 2 camadas + BatchNorm, sem `loss.backward()` | Stage 4 avançado — exercício prático real (Colab linkado) |
+| 6 | Building makemore Part 5: Building WaveNet | rede convolucional tipo árvore (WaveNet), `torch.nn`, workflow de DL | Stage 6, Track 2 (PyTorch) |
+| 7 | Let's build GPT: from scratch, in code, spelled out | GPT completo ("Attention is All You Need", GPT-2/3) | **Stage 6 — equivalente direto a IMPA gpt_5** |
+| 8 | Let's build the GPT Tokenizer | BPE tokenizer, `encode()`/`decode()`, por que tokenização causa comportamentos estranhos em LLM | Track 2 — tema que nenhuma outra fonte catalogada cobre em profundidade até agora |
+
+**Conclusão**: junto com a série GPT do IMPA, essas duas são as fontes de maior profundidade prática pra Track 1 inteiro — considerar como par (assistir Karpathy antes/depois do notebook IMPA equivalente do mesmo estágio, não escolher uma só). Aula 8 (tokenizer) fecha uma lacuna que nenhuma outra fonte do catálogo cobre.
+
 ## Cruzamento com estágios do ROADMAP.md
 
 | Estágio / Área | Fontes que cobrem (verificadas) | Lacuna |
@@ -266,12 +296,12 @@ Fecha bem a lacuna "Track 2 - LLMs, agentes, RAG, MCP":
 | **Track 1 - Stage 1** (vetores, matrizes, normalização, estatística; carregar dataset, calcular stats à mão) | **d2l.ai 2.3 (Linear Algebra) + 2.6 (Probability and Statistics) + Apêndice 22** — match direto, com código. IMPA Aula 0 (pré-requisitos) candidata forte, PDF ainda não lido. Tutorial `numpy/numpy-tutorials` (achado na conversa principal). | **Resolvida** nesta 2ª passada — d2l.ai fecha com profundidade. |
 | **Track 1 - Stage 2** (forward pass: um neurônio, depois rede pequena) | IMPA GPT 2 (rede de uma camada) e GPT 4 (muitas camadas) — direto. CS231n aulas 2-4. MIT 6.S191 Lecture 1. | Bem coberto. |
 | **Track 1 - Stage 3** (loss: MSE, cross-entropy, MLE) | **d2l.ai 22.7 Maximum Likelihood** (match direto) + CS231n aula 2 (softmax loss) + Google ML Crash Course módulo 1 (raso). | **Resolvida** nesta 2ª passada — d2l.ai cobre MLE isoladamente. |
-| **Track 1 - Stage 4** (backprop, regra da cadeia, gradientes) | CS231n aula 4 (com handout de backprop manual + paper "Efficient BackProp"). CS224n aula 3. IMPA GPT 0 (diferenciação automática) — ótimo encaixe, é literal "backprop by hand". | Bem coberto, inclusive com fonte de alto rigor (IMPA). |
+| **Track 1 - Stage 4** (backprop, regra da cadeia, gradientes) | CS231n aula 4 (com handout de backprop manual + paper "Efficient BackProp"). CS224n aula 3. IMPA GPT 0 (diferenciação automática). **Karpathy aula 1 (micrograd) e aula 5 (Backprop Ninja)** — o mesmo exercício em 2 fontes independentes, bom pra comparar implementação. | Bem coberto, fonte dupla de alto rigor (IMPA + Karpathy). |
 | **Track 1 - Stage 5** (otimização: GD, SGD, Adam, overfitting, regularização) | CS231n aula 3, IMPA Lab 6, **d2l.ai cap. 12 inteiro** (GD, SGD, Momentum, Adagrad, RMSProp, Adam — mais completo). | Bem coberto, agora com fonte ainda mais completa. |
-| **Track 1 - Stage 6** (softmax, sampling, atenção, transformers, LM pequeno) | IMPA série GPT, CS231n aula 8, CS224n aulas 4-5, MIT 6.S191, **d2l.ai cap. 11 (Attention Mechanisms and Transformers, do zero)**. | Bem coberto — estágio com mais excesso de fontes de toda a trilha. |
+| **Track 1 - Stage 6** (softmax, sampling, atenção, transformers, LM pequeno) | IMPA série GPT, CS231n aula 8, CS224n aulas 4-5, MIT 6.S191, d2l.ai cap. 11 (Attention Mechanisms and Transformers, do zero), **Karpathy aula 7 (Let's build GPT) e aula 8 (GPT Tokenizer, único a cobrir BPE em profundidade)**. | Bem coberto — estágio com mais excesso de fontes de toda a trilha. Tokenização (Karpathy aula 8) era lacuna real, agora fechada. |
 | **Track 2 - Git/GitHub, ambiente de dev** | MIT Missing Semester (quase inteiro: shell, ambiente, debugging, git, empacotamento). | Coberto. |
 | **Track 2 - PyTorch** | fast.ai, CS224n tutorial, **Made With ML (Toolkit: NumPy, Pandas, PyTorch)**, d2l.ai (código em PyTorch em quase todo capítulo). | Melhorou — ainda sem "tradutor" dedicado NumPy→PyTorch, mas 4 fontes já usam PyTorch lado a lado com os conceitos do Track 1. |
-| **Track 2 - LLMs, agentes, RAG, MCP** | CS224n aulas 9-10, MIT Missing Semester "Agentic Coding", HF Agents/Context/LLM Courses, **DeepLearning.AI "Build AI Apps with MCP Server"** (único curso de MCP encontrado) + cursos de agentes (crewAI, LangGraph). | **MCP deixou de ser lacuna total** — achei 1 curso dedicado. Resto já estava bem coberto. |
+| **Track 2 - LLMs, agentes, RAG, MCP** | CS224n aulas 9-10, MIT Missing Semester "Agentic Coding", HF Agents/Context/LLM Courses, **DeepLearning.AI "Build AI Apps with MCP Server"** (único curso de MCP encontrado) + cursos de agentes (crewAI, LangGraph) + **canal AI Engineer** (talks de produção atualizados continuamente, evals/RAG/context engineering/MCP no mundo real). | **MCP deixou de ser lacuna total** — achei 1 curso dedicado. Resto já estava bem coberto. AI Engineer cobre a parte "o que é usado agora", que cursos estruturados não cobrem por natureza (ficam desatualizados). |
 | **Track 2 - Hugging Face** | CS224n tutorial, MIT 6.S191 Lab 3, **12 cursos oficiais HF catalogados** (LLM, Agents, Context, smol, Deep RL, CV, Audio, Diffusion, Games/Robotics/3D). | Melhorou bastante — módulos internos de cada curso ainda não verificados. |
 | **Track 2 - FastAPI, Docker, experiment tracking** | **FastAPI tutorial oficial** (41 capítulos, inclui SQL DB e testing) + **docker-curriculum.com + docs.docker.com** (conceito + prática empacotando app Flask) + **FSDL Lab 4** (experiment tracking). | **Resolvida** — as três ferramentas específicas agora têm fonte primária verificada. |
 | **roadmap.sh "AI and Data Scientist" (blocos 1-8)** | Sem mudança nesta passada. | — |
